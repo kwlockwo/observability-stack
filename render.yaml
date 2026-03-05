@@ -79,8 +79,8 @@ projects:
                   name: prometheus
                   type: pserv
                   property: hostport
-              # Optional: extra OTel Collector config as a YAML string.
-              # Prefer mounting a secret file at /etc/secrets/otelcol_extra.yaml instead.
+              # Optional: extra OTel Collector config — mount a secret file at
+              # /etc/secrets/otelcol_extra.yaml on this service in the Render dashboard.
               - key: OTEL_EXTRA_CONFIG
                 value: ""
             disk:
