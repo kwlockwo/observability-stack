@@ -48,7 +48,6 @@ projects:
             envVars:
               - key: GRAFANA_VERSION
                 value: 11.4.0
-              # GF_SERVER_ROOT_URL is set at runtime from RENDER_EXTERNAL_URL in the entrypoint
               - key: GF_SECURITY_ADMIN_PASSWORD
                 generateValue: true
               - key: GF_AUTH_ANONYMOUS_ENABLED
