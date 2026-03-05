@@ -3,8 +3,8 @@ projects:
     environments:
       - name: Observability
         services:
-          # Loki - Log Aggregation
-          - type: web
+          # Loki - Log Aggregation (private)
+          - type: pserv
             name: loki
             runtime: docker
             dockerfilePath: ./loki/Dockerfile
@@ -18,8 +18,8 @@ projects:
               mountPath: /loki
               sizeGB: 10
 
-          # Prometheus - Metrics
-          - type: web
+          # Prometheus - Metrics (private)
+          - type: pserv
             name: prometheus
             runtime: docker
             dockerfilePath: ./prometheus/Dockerfile
@@ -37,7 +37,6 @@ projects:
               name: prometheus-data
               mountPath: /prometheus
               sizeGB: 10
-            healthCheckPath: /-/healthy
 
           # Grafana - Observability Dashboard
           - type: web
@@ -74,12 +73,12 @@ projects:
               - key: LOKI_HOST
                 fromService:
                   name: loki
-                  type: web
+                  type: pserv
                   property: hostport
               - key: PROMETHEUS_HOST
                 fromService:
                   name: prometheus
-                  type: web
+                  type: pserv
                   property: hostport
               # Optional: extra OTel Collector config as a YAML string.
               # Prefer mounting a secret file at /etc/secrets/otelcol_extra.yaml instead.
