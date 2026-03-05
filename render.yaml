@@ -10,6 +10,9 @@ projects:
             dockerfilePath: ./loki/Dockerfile
             dockerContext: ./loki
             plan: starter
+            buildFilter:
+              paths:
+                - loki/**
             envVars:
               - key: LOKI_VERSION
                 value: 3.3.2
@@ -25,6 +28,9 @@ projects:
             dockerfilePath: ./prometheus/Dockerfile
             dockerContext: ./prometheus
             plan: starter
+            buildFilter:
+              paths:
+                - prometheus/**
             envVars:
               - key: PROMETHEUS_VERSION
                 value: v3.2.1
@@ -45,6 +51,9 @@ projects:
             dockerfilePath: ./grafana/Dockerfile
             dockerContext: ./grafana
             plan: starter
+            buildFilter:
+              paths:
+                - grafana/**
             envVars:
               - key: GRAFANA_VERSION
                 value: 11.4.0
@@ -64,6 +73,9 @@ projects:
             dockerfilePath: ./otel-collector/Dockerfile
             dockerContext: ./otel-collector
             plan: starter
+            buildFilter:
+              paths:
+                - otel-collector/**
             envVars:
               - key: OTEL_VERSION
                 value: 0.120.0
