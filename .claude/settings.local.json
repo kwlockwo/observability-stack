@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:render.com)"
+      "WebFetch(domain:render.com)",
+      "Bash(gh repo create kwlockwo/observability-stack --public --source=. --remote=origin --push)"
     ]
   }
 }

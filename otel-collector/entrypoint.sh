@@ -3,10 +3,10 @@ set -e
 
 # Render provides host:port via fromService. Construct the full URLs here.
 if [ -n "$LOKI_HOST" ]; then
-    export LOKI_ENDPOINT="https://${LOKI_HOST}/loki/api/v1/push"
+    export LOKI_ENDPOINT="http://${LOKI_HOST}/loki/api/v1/push"
 fi
 if [ -n "$PROMETHEUS_HOST" ]; then
-    export PROMETHEUS_REMOTE_WRITE_ENDPOINT="https://${PROMETHEUS_HOST}/api/v1/write"
+    export PROMETHEUS_REMOTE_WRITE_ENDPOINT="http://${PROMETHEUS_HOST}/api/v1/write"
 fi
 
 BASE_CONFIG="/etc/otelcol-contrib/config.yaml"
