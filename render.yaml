@@ -1,88 +1,92 @@
-services:
-  # Loki - Log Aggregation
-  - type: web
-    name: loki
-    runtime: docker
-    dockerfilePath: ./loki/Dockerfile
-    dockerContext: ./loki
-    plan: starter
-    envVars:
-      - key: LOKI_VERSION
-        value: 3.3.2
-    disk:
-      name: loki-data
-      mountPath: /loki
-      sizeGB: 10
+projects:
+  - name: Observability
+    environments:
+      - name: Observability
+        services:
+          # Loki - Log Aggregation
+          - type: web
+            name: loki
+            runtime: docker
+            dockerfilePath: ./loki/Dockerfile
+            dockerContext: ./loki
+            plan: starter
+            envVars:
+              - key: LOKI_VERSION
+                value: 3.3.2
+            disk:
+              name: loki-data
+              mountPath: /loki
+              sizeGB: 10
 
-  # Prometheus - Metrics
-  - type: web
-    name: prometheus
-    runtime: docker
-    dockerfilePath: ./prometheus/Dockerfile
-    dockerContext: ./prometheus
-    plan: starter
-    envVars:
-      - key: PROMETHEUS_VERSION
-        value: v3.2.1
-      # Optional: JSON array of extra scrape targets.
-      # Example: [{"job_name":"my-app","targets":["my-app.onrender.com:443"]}]
-      # Prefer mounting a secret file at /etc/prometheus/scrape_configs.yml instead.
-      - key: EXTRA_SCRAPE_TARGETS
-        value: ""
-    disk:
-      name: prometheus-data
-      mountPath: /prometheus
-      sizeGB: 10
-    healthCheckPath: /-/healthy
+          # Prometheus - Metrics
+          - type: web
+            name: prometheus
+            runtime: docker
+            dockerfilePath: ./prometheus/Dockerfile
+            dockerContext: ./prometheus
+            plan: starter
+            envVars:
+              - key: PROMETHEUS_VERSION
+                value: v3.2.1
+              # Optional: JSON array of extra scrape targets.
+              # Example: [{"job_name":"my-app","targets":["my-app.onrender.com:443"]}]
+              # Prefer mounting a secret file at /etc/secrets/scrape_configs.yml instead.
+              - key: EXTRA_SCRAPE_TARGETS
+                value: ""
+            disk:
+              name: prometheus-data
+              mountPath: /prometheus
+              sizeGB: 10
+            healthCheckPath: /-/healthy
 
-  # Grafana - Observability Dashboard
-  - type: web
-    name: grafana
-    runtime: docker
-    dockerfilePath: ./grafana/Dockerfile
-    dockerContext: ./grafana
-    plan: starter
-    envVars:
-      - key: GRAFANA_VERSION
-        value: 11.4.0
-      # GF_SERVER_ROOT_URL is set at runtime from RENDER_EXTERNAL_URL in the entrypoint
-      - key: GF_SECURITY_ADMIN_PASSWORD
-        generateValue: true
-      - key: GF_AUTH_ANONYMOUS_ENABLED
-        value: "false"
-    disk:
-      name: grafana-data
-      mountPath: /var/lib/grafana
-      sizeGB: 1
+          # Grafana - Observability Dashboard
+          - type: web
+            name: grafana
+            runtime: docker
+            dockerfilePath: ./grafana/Dockerfile
+            dockerContext: ./grafana
+            plan: starter
+            envVars:
+              - key: GRAFANA_VERSION
+                value: 11.4.0
+              # GF_SERVER_ROOT_URL is set at runtime from RENDER_EXTERNAL_URL in the entrypoint
+              - key: GF_SECURITY_ADMIN_PASSWORD
+                generateValue: true
+              - key: GF_AUTH_ANONYMOUS_ENABLED
+                value: "false"
+            disk:
+              name: grafana-data
+              mountPath: /var/lib/grafana
+              sizeGB: 1
 
-  # OpenTelemetry Collector - Telemetry ingestion
-  - type: web
-    name: otel-collector
-    runtime: docker
-    dockerfilePath: ./otel-collector/Dockerfile
-    dockerContext: ./otel-collector
-    plan: starter
-    envVars:
-      - key: OTEL_VERSION
-        value: 0.120.0
-      # LOKI_HOST and PROMETHEUS_HOST are host:port strings provided by Render.
-      # The entrypoint constructs the full URLs (scheme + path) from these.
-      - key: LOKI_HOST
-        fromService:
-          name: loki
-          type: web
-          property: hostport
-      - key: PROMETHEUS_HOST
-        fromService:
-          name: prometheus
-          type: web
-          property: hostport
-      # Optional: extra OTel Collector config as a YAML string.
-      # Prefer mounting a secret file at /etc/otelcol-contrib/config_extra.yaml instead.
-      - key: OTEL_EXTRA_CONFIG
-        value: ""
-    disk:
-      name: otel-collector-data
-      mountPath: /var/lib/otelcol
-      sizeGB: 1
-    healthCheckPath: /
+          # OpenTelemetry Collector - Telemetry ingestion
+          - type: web
+            name: otel-collector
+            runtime: docker
+            dockerfilePath: ./otel-collector/Dockerfile
+            dockerContext: ./otel-collector
+            plan: starter
+            envVars:
+              - key: OTEL_VERSION
+                value: 0.120.0
+              # LOKI_HOST and PROMETHEUS_HOST are host:port strings provided by Render.
+              # The entrypoint constructs the full URLs (scheme + path) from these.
+              - key: LOKI_HOST
+                fromService:
+                  name: loki
+                  type: web
+                  property: hostport
+              - key: PROMETHEUS_HOST
+                fromService:
+                  name: prometheus
+                  type: web
+                  property: hostport
+              # Optional: extra OTel Collector config as a YAML string.
+              # Prefer mounting a secret file at /etc/secrets/otelcol_extra.yaml instead.
+              - key: OTEL_EXTRA_CONFIG
+                value: ""
+            disk:
+              name: otel-collector-data
+              mountPath: /var/lib/otelcol
+              sizeGB: 1
+            healthCheckPath: /
