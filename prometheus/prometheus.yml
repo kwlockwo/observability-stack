@@ -1,0 +1,31 @@
+# Base Prometheus configuration
+# Self-monitoring scrape jobs are defined here.
+# Additional scrape configs can be provided via:
+#   - Secret file: /etc/prometheus/scrape_configs.yml (recommended for production)
+#   - Environment variable: EXTRA_SCRAPE_TARGETS (JSON array, see entrypoint.sh)
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    env: 'production'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['loki:3100']
+    metrics_path: /metrics
+
+  - job_name: 'otel-collector'
+    static_configs:
+      - targets: ['otel-collector:8888']
+    metrics_path: /metrics
+
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+    metrics_path: /metrics

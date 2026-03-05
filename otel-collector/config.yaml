@@ -1,0 +1,88 @@
+# OpenTelemetry Collector Contrib configuration
+#
+# Additional exporters/receivers/processors can be injected via:
+#   - Secret file: /etc/otelcol-contrib/config_extra.yaml (merged at startup)
+#   - Environment variable: OTEL_EXTRA_CONFIG (YAML string, merged at startup)
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+  pprof:
+    endpoint: 0.0.0.0:1777
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+  # Prometheus receiver to scrape this collector's own metrics
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'otel-collector'
+          scrape_interval: 15s
+          static_configs:
+            - targets: ['localhost:8888']
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 1024
+
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 400
+    spike_limit_mib: 100
+
+  # Add resource attributes to all telemetry
+  resource:
+    attributes:
+      - key: collector.name
+        value: "otel-collector"
+        action: insert
+
+exporters:
+  # Export logs to Loki
+  loki:
+    endpoint: "${env:LOKI_ENDPOINT}"
+    default_labels_enabled:
+      exporter: false
+      job: true
+
+  # Export metrics to Prometheus via remote write
+  prometheusremotewrite:
+    endpoint: "${env:PROMETHEUS_REMOTE_WRITE_ENDPOINT}"
+    tls:
+      insecure: true
+
+  # Debug exporter (logs pipeline data to collector stdout — disable in production)
+  debug:
+    verbosity: basic
+
+service:
+  extensions: [health_check, pprof]
+
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [debug]
+
+    metrics:
+      receivers: [otlp, prometheus]
+      processors: [memory_limiter, resource, batch]
+      exporters: [prometheusremotewrite]
+
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, batch]
+      exporters: [loki]
+
+  telemetry:
+    metrics:
+      address: 0.0.0.0:8888
+    logs:
+      level: info
