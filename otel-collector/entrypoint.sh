@@ -5,12 +5,14 @@ set -e
 # Bind the health_check extension to it so Render's health check passes.
 export HEALTH_CHECK_PORT="${PORT:-10000}"
 
-# If no bearer token secret file exists, create an empty one so the
+# If no bearer token secret file exists, create an empty one in /tmp so the
 # bearertokenauth extension starts but effectively allows all requests.
 # In production, mount a Render secret file at /etc/secrets/otlp_bearer_token.
-if [ ! -f /etc/secrets/otlp_bearer_token ]; then
-    mkdir -p /etc/secrets
-    printf '' > /etc/secrets/otlp_bearer_token
+if [ -f /etc/secrets/otlp_bearer_token ]; then
+    export OTLP_BEARER_TOKEN_FILE=/etc/secrets/otlp_bearer_token
+else
+    printf '' > /tmp/otlp_bearer_token
+    export OTLP_BEARER_TOKEN_FILE=/tmp/otlp_bearer_token
 fi
 
 # Render provides host:port via fromService. Construct the full URLs here.

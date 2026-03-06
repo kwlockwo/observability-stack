@@ -12,11 +12,10 @@ extensions:
   pprof:
     endpoint: 0.0.0.0:1777
   bearertokenauth:
-    # Token is read from a Render secret file.
-    # In the Render dashboard, add a secret file named "otlp_bearer_token" to
-    # the otel-collector service containing just the token string (no newline).
-    # Render will mount it at /etc/secrets/otlp_bearer_token.
-    filename: /etc/secrets/otlp_bearer_token
+    # Token file path is set by the entrypoint:
+    # - /etc/secrets/otlp_bearer_token if the Render secret file is mounted
+    # - /tmp/otlp_bearer_token (empty, auth disabled) if no secret is configured
+    filename: ${env:OTLP_BEARER_TOKEN_FILE}
 
 receivers:
   otlp:
