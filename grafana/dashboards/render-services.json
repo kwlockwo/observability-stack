@@ -19,7 +19,7 @@
         "type": "query",
         "name": "service",
         "label": "Service",
-        "datasource": { "type": "prometheus", "uid": "${datasource}" },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
         "query": "label_values(render_service_cpu_limit_seconds, job)",
         "refresh": 2,
         "multi": true,
@@ -41,7 +41,7 @@
       "title": "CPU Usage %",
       "description": "CPU usage as a percentage of the limit, calculated from cumulative CPU time.",
       "gridPos": { "x": 0, "y": 1, "w": 12, "h": 7 },
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "unit": "percent",
@@ -60,7 +60,7 @@
       "type": "timeseries",
       "title": "CPU Limit (cores)",
       "gridPos": { "x": 12, "y": 1, "w": 12, "h": 7 },
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": { "unit": "short", "decimals": 2 }
       },
@@ -81,7 +81,7 @@
       "type": "timeseries",
       "title": "Memory Usage",
       "gridPos": { "x": 0, "y": 9, "w": 12, "h": 7 },
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "bytes" } },
       "targets": [
         {
@@ -102,7 +102,7 @@
       "type": "timeseries",
       "title": "Memory Usage %",
       "gridPos": { "x": 12, "y": 9, "w": 12, "h": 7 },
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
           "unit": "percent",
@@ -136,7 +136,7 @@
       "type": "timeseries",
       "title": "Network Throughput",
       "gridPos": { "x": 0, "y": 17, "w": 24, "h": 7 },
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "Bps" } },
       "targets": [
         {
@@ -159,7 +159,7 @@
       "type": "timeseries",
       "title": "HTTP Request Rate",
       "gridPos": { "x": 0, "y": 25, "w": 12, "h": 7 },
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "reqps" } },
       "targets": [
         {
@@ -172,7 +172,7 @@
       "type": "timeseries",
       "title": "HTTP Request Latency",
       "gridPos": { "x": 12, "y": 25, "w": 12, "h": 7 },
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "ms" } },
       "targets": [
         {
@@ -199,7 +199,7 @@
       "type": "timeseries",
       "title": "Disk Usage",
       "gridPos": { "x": 0, "y": 33, "w": 12, "h": 7 },
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "bytes" } },
       "targets": [
         {
@@ -216,7 +216,7 @@
       "type": "timeseries",
       "title": "Disk I/O",
       "gridPos": { "x": 12, "y": 33, "w": 12, "h": 7 },
-      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "Bps" } },
       "targets": [
         {
