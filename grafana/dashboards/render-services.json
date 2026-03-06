@@ -20,7 +20,7 @@
         "name": "service",
         "label": "Service",
         "datasource": { "type": "prometheus", "uid": "${datasource}" },
-        "query": "label_values(render_service_cpu_limit, service_name)",
+        "query": "label_values(render_service_cpu_limit_seconds, job)",
         "refresh": 2,
         "multi": true,
         "includeAll": true,
@@ -51,8 +51,8 @@
       },
       "targets": [
         {
-          "expr": "100 * rate(render_service_cpu_time{service_name=~\"$service\"}[5m]) / on(service_name, service_id, service_instance_id) render_service_cpu_limit{service_name=~\"$service\"}",
-          "legendFormat": "{{service_name}} ({{service_instance_id}})"
+          "expr": "100 * rate(render_service_cpu_time_seconds{job=~\"$service\"}[5m]) / on(job, instance) render_service_cpu_limit_seconds{job=~\"$service\"}",
+          "legendFormat": "{{job}} ({{instance}})"
         }
       ]
     },
@@ -66,8 +66,8 @@
       },
       "targets": [
         {
-          "expr": "render_service_cpu_limit{service_name=~\"$service\"}",
-          "legendFormat": "{{service_name}} ({{service_instance_id}})"
+          "expr": "render_service_cpu_limit_seconds{job=~\"$service\"}",
+          "legendFormat": "{{job}} ({{instance}})"
         }
       ]
     },
@@ -85,16 +85,16 @@
       "fieldConfig": { "defaults": { "unit": "bytes" } },
       "targets": [
         {
-          "expr": "render_service_memory_usage{service_name=~\"$service\"}",
-          "legendFormat": "usage {{service_name}} ({{service_instance_id}})"
+          "expr": "render_service_memory_usage_bytes{job=~\"$service\"}",
+          "legendFormat": "usage {{job}} ({{instance}})"
         },
         {
-          "expr": "render_service_memory_rss{service_name=~\"$service\"}",
-          "legendFormat": "rss {{service_name}} ({{service_instance_id}})"
+          "expr": "render_service_memory_rss_bytes{job=~\"$service\"}",
+          "legendFormat": "rss {{job}} ({{instance}})"
         },
         {
-          "expr": "render_service_memory_cache{service_name=~\"$service\"}",
-          "legendFormat": "cache {{service_name}} ({{service_instance_id}})"
+          "expr": "render_service_memory_cache_bytes{job=~\"$service\"}",
+          "legendFormat": "cache {{job}} ({{instance}})"
         }
       ]
     },
@@ -121,8 +121,8 @@
       },
       "targets": [
         {
-          "expr": "100 * render_service_memory_usage{service_name=~\"$service\"} / on(service_name, service_id, service_instance_id) render_service_memory_limit{service_name=~\"$service\"}",
-          "legendFormat": "{{service_name}} ({{service_instance_id}})"
+          "expr": "100 * render_service_memory_usage_bytes{job=~\"$service\"} / on(job, instance) render_service_memory_limit_bytes{job=~\"$service\"}",
+          "legendFormat": "{{job}} ({{instance}})"
         }
       ]
     },
@@ -140,12 +140,12 @@
       "fieldConfig": { "defaults": { "unit": "Bps" } },
       "targets": [
         {
-          "expr": "rate(render_service_network_transmit_bytes{service_name=~\"$service\"}[5m])",
-          "legendFormat": "tx {{service_name}} ({{service_instance_id}})"
+          "expr": "rate(render_service_network_transmit_bytes{job=~\"$service\"}[5m])",
+          "legendFormat": "tx {{job}} ({{instance}})"
         },
         {
-          "expr": "rate(render_service_network_receive_bytes{service_name=~\"$service\"}[5m])",
-          "legendFormat": "rx {{service_name}} ({{service_instance_id}})"
+          "expr": "rate(render_service_network_receive_bytes{job=~\"$service\"}[5m])",
+          "legendFormat": "rx {{job}} ({{instance}})"
         }
       ]
     },
@@ -163,8 +163,8 @@
       "fieldConfig": { "defaults": { "unit": "reqps" } },
       "targets": [
         {
-          "expr": "sum by (service_name, status_code) (rate(render_service_http_requests_total{service_name=~\"$service\"}[5m]))",
-          "legendFormat": "{{service_name}} {{status_code}}"
+          "expr": "sum by (job, status_code) (rate(render_service_http_requests_total{job=~\"$service\"}[5m]))",
+          "legendFormat": "{{job}} {{status_code}}"
         }
       ]
     },
@@ -176,16 +176,16 @@
       "fieldConfig": { "defaults": { "unit": "ms" } },
       "targets": [
         {
-          "expr": "render_service_http_requests_latency{service_name=~\"$service\", quantile=\"0.99\"}",
-          "legendFormat": "p99 {{service_name}}"
+          "expr": "render_service_http_requests_latency_milliseconds{job=~\"$service\", quantile=\"0.99\"}",
+          "legendFormat": "p99 {{job}}"
         },
         {
-          "expr": "render_service_http_requests_latency{service_name=~\"$service\", quantile=\"0.95\"}",
-          "legendFormat": "p95 {{service_name}}"
+          "expr": "render_service_http_requests_latency_milliseconds{job=~\"$service\", quantile=\"0.95\"}",
+          "legendFormat": "p95 {{job}}"
         },
         {
-          "expr": "render_service_http_requests_latency{service_name=~\"$service\", quantile=\"0.50\"}",
-          "legendFormat": "p50 {{service_name}}"
+          "expr": "render_service_http_requests_latency_milliseconds{job=~\"$service\", quantile=\"0.50\"}",
+          "legendFormat": "p50 {{job}}"
         }
       ]
     },
@@ -203,12 +203,12 @@
       "fieldConfig": { "defaults": { "unit": "bytes" } },
       "targets": [
         {
-          "expr": "render_service_disk_usage{service_name=~\"$service\"}",
-          "legendFormat": "used {{service_name}}"
+          "expr": "render_service_disk_usage_bytes{job=~\"$service\"}",
+          "legendFormat": "used {{job}}"
         },
         {
-          "expr": "render_service_disk_capacity{service_name=~\"$service\"}",
-          "legendFormat": "capacity {{service_name}}"
+          "expr": "render_service_disk_capacity_bytes{job=~\"$service\"}",
+          "legendFormat": "capacity {{job}}"
         }
       ]
     },
@@ -220,12 +220,12 @@
       "fieldConfig": { "defaults": { "unit": "Bps" } },
       "targets": [
         {
-          "expr": "rate(render_service_disk_read_bytes{service_name=~\"$service\"}[5m])",
-          "legendFormat": "read {{service_name}}"
+          "expr": "rate(render_service_disk_read_bytes{job=~\"$service\"}[5m])",
+          "legendFormat": "read {{job}}"
         },
         {
-          "expr": "rate(render_service_disk_write_bytes{service_name=~\"$service\"}[5m])",
-          "legendFormat": "write {{service_name}}"
+          "expr": "rate(render_service_disk_write_bytes{job=~\"$service\"}[5m])",
+          "legendFormat": "write {{job}}"
         }
       ]
     }
