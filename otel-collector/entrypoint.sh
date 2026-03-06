@@ -5,6 +5,14 @@ set -e
 # Bind the health_check extension to it so Render's health check passes.
 export HEALTH_CHECK_PORT="${PORT:-10000}"
 
+# If no bearer token secret file exists, create an empty one so the
+# bearertokenauth extension starts but effectively allows all requests.
+# In production, mount a Render secret file at /etc/secrets/otlp_bearer_token.
+if [ ! -f /etc/secrets/otlp_bearer_token ]; then
+    mkdir -p /etc/secrets
+    printf '' > /etc/secrets/otlp_bearer_token
+fi
+
 # Render provides host:port via fromService. Construct the full URLs here.
 if [ -n "$LOKI_HOST" ]; then
     export LOKI_ENDPOINT="http://${LOKI_HOST}/loki/api/v1/push"
