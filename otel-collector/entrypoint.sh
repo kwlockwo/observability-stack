@@ -1,9 +1,8 @@
 #!/bin/sh
 set -e
 
-# Render assigns a dynamic port via $PORT (default 10000).
-# Bind the health_check extension to it so Render's health check passes.
-export HEALTH_CHECK_PORT="${PORT:-10000}"
+# PORT=4318 is set in render.yaml so Render exposes the OTLP HTTP receiver
+# directly on the public port. TCP health check is used (no healthCheckPath).
 export OTEL_LOG_LEVEL="${OTEL_LOG_LEVEL:-info}"
 
 # If no bearer token secret file exists, create an empty one in /tmp so the
