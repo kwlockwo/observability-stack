@@ -34,21 +34,6 @@ projects:
             envVars:
               - key: PROMETHEUS_VERSION
                 value: v3.2.1
-              - key: LOKI_HOST
-                fromService:
-                  name: loki
-                  type: pserv
-                  property: hostport
-              - key: OTEL_COLLECTOR_HOST
-                fromService:
-                  name: otel-collector
-                  type: web
-                  property: hostport
-              - key: GRAFANA_HOST
-                fromService:
-                  name: grafana
-                  type: web
-                  property: hostport
               # Optional: JSON array of extra scrape targets.
               # Example: [{"job_name":"my-app","targets":["my-app.onrender.com:443"]}]
               # Prefer mounting a secret file at /etc/secrets/scrape_configs.yml instead.
