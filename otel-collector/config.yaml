@@ -85,7 +85,7 @@ service:
     metrics:
       receivers: [otlp, prometheus]
       processors: [memory_limiter, resource, batch]
-      exporters: [prometheusremotewrite]
+      exporters: [prometheusremotewrite, debug]
 
     logs:
       receivers: [otlp]
@@ -96,4 +96,4 @@ service:
     metrics:
       address: 0.0.0.0:8888
     logs:
-      level: info
+      level: ${env:OTEL_LOG_LEVEL}

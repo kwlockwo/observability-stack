@@ -103,6 +103,8 @@ projects:
                   property: hostport
               # Optional: extra OTel Collector config — mount a secret file at
               # /etc/secrets/otelcol_extra.yaml on this service in the Render dashboard.
+              - key: OTEL_LOG_LEVEL
+                value: "info"
               - key: OTEL_EXTRA_CONFIG
                 value: ""
             healthCheckPath: /
