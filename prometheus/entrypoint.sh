@@ -6,9 +6,19 @@ CONFIG_FILE="/etc/prometheus/prometheus.yml"
 EXTRA_SCRAPE_FILE="/etc/secrets/scrape_configs.yml"
 MERGED_CONFIG="/tmp/prometheus-merged.yml"
 
-# Start with the base config, substituting fromService hostports for scrape targets
+# Start with the base config, substituting internal hosts for scrape targets
 cp "$CONFIG_FILE" "$MERGED_CONFIG"
 
+# Replace placeholder hostnames with Render internal hosts + known ports
+if [ -n "$LOKI_INTERNAL_HOST" ]; then
+    sed -i "s|loki:3100|${LOKI_INTERNAL_HOST}:3100|g" "$MERGED_CONFIG"
+fi
+if [ -n "$OTEL_COLLECTOR_INTERNAL_HOST" ]; then
+    sed -i "s|otel-collector:8888|${OTEL_COLLECTOR_INTERNAL_HOST}:8888|g" "$MERGED_CONFIG"
+fi
+if [ -n "$GRAFANA_INTERNAL_HOST" ]; then
+    sed -i "s|grafana:3000|${GRAFANA_INTERNAL_HOST}:3000|g" "$MERGED_CONFIG"
+fi
 
 # Option 1: Append extra scrape configs from a Render secret file (preferred).
 # In the Render dashboard, add a secret file named "scrape_configs.yml" to the
