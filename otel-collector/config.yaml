@@ -23,7 +23,7 @@ receivers:
         auth:
           authenticator: bearertokenauth
       http:
-        endpoint: 0.0.0.0:4318
+        endpoint: 0.0.0.0:${env:OTLP_HTTP_PORT}
         auth:
           authenticator: bearertokenauth
 
