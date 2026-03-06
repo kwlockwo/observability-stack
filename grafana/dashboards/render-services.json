@@ -9,13 +9,6 @@
   "templating": {
     "list": [
       {
-        "type": "datasource",
-        "name": "datasource",
-        "label": "Prometheus",
-        "pluginId": "prometheus",
-        "current": {}
-      },
-      {
         "type": "query",
         "name": "service",
         "label": "Service",
