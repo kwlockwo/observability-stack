@@ -99,4 +99,3 @@ projects:
               name: otel-collector-data
               mountPath: /var/lib/otelcol
               sizeGB: 1
-            healthCheckPath: /
