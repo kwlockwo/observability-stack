@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+# Render assigns a dynamic port via $PORT (default 10000).
+# Bind the health_check extension to it so Render's health check passes.
+export HEALTH_CHECK_PORT="${PORT:-10000}"
+
 # Render provides host:port via fromService. Construct the full URLs here.
 if [ -n "$LOKI_HOST" ]; then
     export LOKI_ENDPOINT="http://${LOKI_HOST}/loki/api/v1/push"

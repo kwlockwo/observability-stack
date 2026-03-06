@@ -6,7 +6,9 @@
 
 extensions:
   health_check:
-    endpoint: 0.0.0.0:13133
+    # Render expects the service to respond on $PORT (default 10000).
+    # The entrypoint sets HEALTH_CHECK_PORT from $PORT at startup.
+    endpoint: 0.0.0.0:${env:HEALTH_CHECK_PORT}
   pprof:
     endpoint: 0.0.0.0:1777
 

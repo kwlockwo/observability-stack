@@ -95,6 +95,7 @@ projects:
               # /etc/secrets/otelcol_extra.yaml on this service in the Render dashboard.
               - key: OTEL_EXTRA_CONFIG
                 value: ""
+            healthCheckPath: /
             disk:
               name: otel-collector-data
               mountPath: /var/lib/otelcol
