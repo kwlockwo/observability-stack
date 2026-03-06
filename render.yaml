@@ -61,6 +61,16 @@ projects:
                 generateValue: true
               - key: GF_AUTH_ANONYMOUS_ENABLED
                 value: "false"
+              - key: PROMETHEUS_HOST
+                fromService:
+                  name: prometheus
+                  type: pserv
+                  property: hostport
+              - key: LOKI_HOST
+                fromService:
+                  name: loki
+                  type: pserv
+                  property: hostport
             disk:
               name: grafana-data
               mountPath: /var/lib/grafana
