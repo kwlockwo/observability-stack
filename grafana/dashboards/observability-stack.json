@@ -1,0 +1,245 @@
+{
+  "title": "Observability Stack",
+  "uid": "observability-stack",
+  "tags": ["self-monitoring"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "refresh": "30s",
+  "time": { "from": "now-1h", "to": "now" },
+  "panels": [
+    {
+      "type": "row",
+      "title": "Prometheus",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+    {
+      "type": "stat",
+      "title": "Prometheus Up",
+      "gridPos": { "x": 0, "y": 1, "w": 3, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            { "type": "value", "options": { "1": { "text": "UP", "color": "green" }, "0": { "text": "DOWN", "color": "red" } } }
+          ],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] }
+        }
+      },
+      "targets": [{ "expr": "up{job=\"prometheus\"}", "legendFormat": "" }]
+    },
+    {
+      "type": "stat",
+      "title": "Samples Ingested / sec",
+      "gridPos": { "x": 3, "y": 1, "w": 4, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 1 } },
+      "targets": [{ "expr": "rate(prometheus_tsdb_head_samples_appended_total[5m])", "legendFormat": "" }]
+    },
+    {
+      "type": "stat",
+      "title": "TSDB Series",
+      "gridPos": { "x": 7, "y": 1, "w": 4, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "targets": [{ "expr": "prometheus_tsdb_head_series", "legendFormat": "" }]
+    },
+    {
+      "type": "stat",
+      "title": "TSDB Storage Size",
+      "gridPos": { "x": 11, "y": 1, "w": 4, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "bytes" } },
+      "targets": [{ "expr": "prometheus_tsdb_storage_blocks_bytes + prometheus_tsdb_head_chunks_storage_size_bytes", "legendFormat": "" }]
+    },
+    {
+      "type": "timeseries",
+      "title": "Prometheus Query Duration",
+      "gridPos": { "x": 0, "y": 5, "w": 12, "h": 7 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "targets": [
+        { "expr": "histogram_quantile(0.99, rate(prometheus_engine_query_duration_seconds_bucket[5m]))", "legendFormat": "p99" },
+        { "expr": "histogram_quantile(0.50, rate(prometheus_engine_query_duration_seconds_bucket[5m]))", "legendFormat": "p50" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Prometheus Samples Ingested",
+      "gridPos": { "x": 12, "y": 5, "w": 12, "h": 7 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "targets": [{ "expr": "rate(prometheus_tsdb_head_samples_appended_total[5m])", "legendFormat": "samples/s" }]
+    },
+    {
+      "type": "row",
+      "title": "Loki",
+      "gridPos": { "x": 0, "y": 12, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+    {
+      "type": "stat",
+      "title": "Loki Up",
+      "gridPos": { "x": 0, "y": 13, "w": 3, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            { "type": "value", "options": { "1": { "text": "UP", "color": "green" }, "0": { "text": "DOWN", "color": "red" } } }
+          ],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] }
+        }
+      },
+      "targets": [{ "expr": "up{job=\"loki\"}", "legendFormat": "" }]
+    },
+    {
+      "type": "stat",
+      "title": "Log Lines Received / sec",
+      "gridPos": { "x": 3, "y": 13, "w": 4, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 1 } },
+      "targets": [{ "expr": "sum(rate(loki_distributor_lines_received_total[5m]))", "legendFormat": "" }]
+    },
+    {
+      "type": "stat",
+      "title": "Log Bytes Received / sec",
+      "gridPos": { "x": 7, "y": 13, "w": 4, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "Bps" } },
+      "targets": [{ "expr": "sum(rate(loki_distributor_bytes_received_total[5m]))", "legendFormat": "" }]
+    },
+    {
+      "type": "timeseries",
+      "title": "Loki Ingestion Rate",
+      "gridPos": { "x": 0, "y": 17, "w": 12, "h": 7 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "targets": [{ "expr": "sum(rate(loki_distributor_lines_received_total[5m]))", "legendFormat": "lines/s" }]
+    },
+    {
+      "type": "timeseries",
+      "title": "Loki Request Duration",
+      "gridPos": { "x": 12, "y": 17, "w": 12, "h": 7 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "targets": [
+        { "expr": "histogram_quantile(0.99, sum(rate(loki_request_duration_seconds_bucket[5m])) by (le, route))", "legendFormat": "p99 {{route}}" },
+        { "expr": "histogram_quantile(0.50, sum(rate(loki_request_duration_seconds_bucket[5m])) by (le, route))", "legendFormat": "p50 {{route}}" }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "OTel Collector",
+      "gridPos": { "x": 0, "y": 24, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+    {
+      "type": "stat",
+      "title": "OTel Collector Up",
+      "gridPos": { "x": 0, "y": 25, "w": 3, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            { "type": "value", "options": { "1": { "text": "UP", "color": "green" }, "0": { "text": "DOWN", "color": "red" } } }
+          ],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] }
+        }
+      },
+      "targets": [{ "expr": "up{job=\"otel-collector\"}", "legendFormat": "" }]
+    },
+    {
+      "type": "stat",
+      "title": "Spans Received / sec",
+      "gridPos": { "x": 3, "y": 25, "w": 4, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 1 } },
+      "targets": [{ "expr": "rate(otelcol_receiver_accepted_spans_total[5m])", "legendFormat": "" }]
+    },
+    {
+      "type": "stat",
+      "title": "Metrics Points Received / sec",
+      "gridPos": { "x": 7, "y": 25, "w": 4, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 1 } },
+      "targets": [{ "expr": "rate(otelcol_receiver_accepted_metric_points_total[5m])", "legendFormat": "" }]
+    },
+    {
+      "type": "stat",
+      "title": "Log Records Received / sec",
+      "gridPos": { "x": 11, "y": 25, "w": 4, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 1 } },
+      "targets": [{ "expr": "rate(otelcol_receiver_accepted_log_records_total[5m])", "legendFormat": "" }]
+    },
+    {
+      "type": "stat",
+      "title": "Exporter Send Failures / sec",
+      "gridPos": { "x": 15, "y": 25, "w": 4, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 0.1 }] }
+        }
+      },
+      "targets": [{ "expr": "sum(rate(otelcol_exporter_send_failed_spans_total[5m]) + rate(otelcol_exporter_send_failed_metric_points_total[5m]) + rate(otelcol_exporter_send_failed_log_records_total[5m]))", "legendFormat": "" }]
+    },
+    {
+      "type": "timeseries",
+      "title": "OTel Collector Throughput",
+      "gridPos": { "x": 0, "y": 29, "w": 12, "h": 7 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "targets": [
+        { "expr": "rate(otelcol_receiver_accepted_spans_total[5m])", "legendFormat": "spans/s" },
+        { "expr": "rate(otelcol_receiver_accepted_metric_points_total[5m])", "legendFormat": "metric points/s" },
+        { "expr": "rate(otelcol_receiver_accepted_log_records_total[5m])", "legendFormat": "log records/s" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "OTel Collector Queue Size",
+      "gridPos": { "x": 12, "y": 29, "w": 12, "h": 7 },
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "targets": [{ "expr": "otelcol_exporter_queue_size", "legendFormat": "{{exporter}}" }]
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "type": "datasource",
+        "name": "datasource",
+        "label": "Prometheus",
+        "pluginId": "prometheus",
+        "current": {}
+      }
+    ]
+  }
+}
