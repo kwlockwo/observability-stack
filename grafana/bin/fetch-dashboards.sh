@@ -32,10 +32,25 @@ mkdir -p "$DEST_DIR"
 echo "$DASHBOARD_GITHUB_REPOS" | tr ';' '\n' | while IFS= read -r url; do
     [ -z "$url" ] && continue
 
+    # Strip https://github.com/ prefix
     path=$(echo "$url" | sed 's|https://github.com/||')
+    # org/repo is first two segments
     repo=$(echo "$path" | cut -d'/' -f1-2)
-    subpath=$(echo "$path" | grep -oP '(?<=tree/[^/]+/).*' || true)
-    branch=$(echo "$path" | grep -oP '(?<=tree/)[^/]+' || echo 'main')
+    # Check if URL contains /tree/<branch>/...
+    case "$path" in
+        */tree/*)
+            # Extract branch: segment after "tree/"
+            branch=$(echo "$path" | sed 's|.*/tree/||' | cut -d'/' -f1)
+            # Extract subpath: everything after "tree/<branch>/"
+            subpath=$(echo "$path" | sed "s|.*/tree/${branch}/||")
+            # If subpath equals the branch, there's no subpath
+            [ "$subpath" = "$branch" ] && subpath=""
+            ;;
+        *)
+            branch="main"
+            subpath=""
+            ;;
+    esac
 
     echo "Fetching from $repo (branch: $branch, path: ${subpath:-/})"
 
@@ -58,5 +73,5 @@ echo "$DASHBOARD_GITHUB_REPOS" | tr ';' '\n' | while IFS= read -r url; do
     done
 
     rm -rf "$CLONE_DIR"
-    echo "  Done — $count dashboard(s) written to $DEST_DIR"
+    echo "  Done - $count dashboard(s) written to $DEST_DIR"
 done
