@@ -53,6 +53,13 @@ processors:
         value: "otel-collector"
         action: insert
 
+  # Promote resource attributes to Loki stream labels
+  transform/loki_labels:
+    log_statements:
+      - context: resource
+        statements:
+          - set(attributes["loki.resource.labels"], "deployment.environment")
+
 exporters:
   # Export logs to Loki
   loki:
@@ -60,9 +67,6 @@ exporters:
     default_labels_enabled:
       exporter: false
       job: true
-    labels:
-      resource:
-        deployment.environment: "deployment_environment"
 
   # Export metrics to Prometheus via remote write
   prometheusremotewrite:
@@ -92,7 +96,7 @@ service:
 
     logs:
       receivers: [otlp]
-      processors: [memory_limiter, resource, batch]
+      processors: [memory_limiter, resource, transform/loki_labels, batch]
       exporters: [loki]
 
   telemetry:
