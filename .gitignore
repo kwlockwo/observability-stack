@@ -1,12 +1,34 @@
-# Environment variables (if testing locally)
+# Environment variables
 .env
+.env.*
+!.env.example
 
 # OS files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# IDE
+# IDE / AI tools
 .vscode/
 .idea/
+.claude/
 *.swp
 *.swo
+*~
+
+# Docker
+*.log
+
+# Local data directories (if running stack locally)
+loki/data/
+prometheus/data/
+grafana/data/
+
+# Temporary / build artifacts
+tmp/
+*.tmp
