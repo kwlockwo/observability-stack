@@ -66,6 +66,8 @@ exporters:
     endpoint: "${env:PROMETHEUS_REMOTE_WRITE_ENDPOINT}"
     tls:
       insecure: true
+    resource_to_telemetry_conversion:
+      enabled: true
 
   # Debug exporter (logs pipeline data to collector stdout — disable in production)
   debug:
