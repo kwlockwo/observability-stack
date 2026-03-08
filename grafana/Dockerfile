@@ -36,6 +36,7 @@ COPY provisioning/dashboards/dashboards.yml /etc/grafana/provisioning/dashboards
 COPY provisioning/grafana.ini /etc/grafana/grafana.ini
 COPY dashboards/ /etc/grafana/dashboards/
 COPY --from=dashboard-fetcher /fetched-dashboards/ /etc/grafana/dashboards/
+COPY fetch-dashboards.sh /fetch-dashboards.sh
 
 ENV GF_AUTH_ANONYMOUS_ENABLED=false
 ENV GF_AUTH_DISABLE_LOGIN_FORM=false
