@@ -60,8 +60,9 @@ exporters:
     default_labels_enabled:
       exporter: false
       job: true
-    resource_to_telemetry_conversion:
-      enabled: true
+    labels:
+      resource:
+        deployment.environment: "deployment_environment"
 
   # Export metrics to Prometheus via remote write
   prometheusremotewrite:
