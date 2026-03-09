@@ -58,7 +58,7 @@ processors:
     log_statements:
       - context: resource
         statements:
-          - set(attributes["loki.resource.labels"], "deployment.environment")
+          - set(attributes["loki.resource.labels"], "deployment.environment,scheduler_job,scheduler_job_class,handler")
 
 exporters:
   # Export logs to Loki
