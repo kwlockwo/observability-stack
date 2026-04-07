@@ -94,6 +94,26 @@ projects:
               mountPath: /var/lib/grafana
               sizeGB: 1
 
+          # Grafana MCP Server - MCP over SSE for Claude integration
+          - type: web
+            name: grafana-mcp
+            runtime: docker
+            dockerfilePath: ./grafana-mcp/Dockerfile
+            dockerContext: ./grafana-mcp
+            plan: starter
+            region: singapore
+            buildFilter:
+              paths:
+                - grafana-mcp/**
+            envVars:
+              - key: GRAFANA_HOST
+                fromService:
+                  name: grafana
+                  type: web
+                  property: hostport
+              - key: GRAFANA_SERVICE_ACCOUNT_TOKEN
+                sync: false
+
           # OpenTelemetry Collector - Telemetry ingestion
           - type: web
             name: otel-collector
