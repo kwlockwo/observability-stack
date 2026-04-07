@@ -1,3 +1,7 @@
+{
+	admin off
+}
+
 :{$PORT:8080} {
 	@authorized {
 		header Authorization "Bearer {$MCP_BEARER_TOKEN}"
