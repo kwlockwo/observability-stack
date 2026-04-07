@@ -113,6 +113,8 @@ projects:
                   property: hostport
               - key: GRAFANA_SERVICE_ACCOUNT_TOKEN
                 sync: false
+              - key: MCP_BEARER_TOKEN
+                generateValue: true
 
           # OpenTelemetry Collector - Telemetry ingestion
           - type: web

@@ -1,0 +1,11 @@
+:{$PORT:8080} {
+	@authorized {
+		header Authorization "Bearer {$MCP_BEARER_TOKEN}"
+	}
+
+	handle @authorized {
+		reverse_proxy localhost:8000
+	}
+
+	respond 401
+}
