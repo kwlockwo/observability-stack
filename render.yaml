@@ -106,6 +106,8 @@ projects:
               paths:
                 - grafana-mcp/**
             envVars:
+              - key: GRAFANA_MCP_VERSION
+                value: "0.5.0"
               - key: GRAFANA_HOST
                 fromService:
                   name: grafana
